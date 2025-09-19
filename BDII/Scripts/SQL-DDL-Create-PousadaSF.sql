@@ -433,6 +433,8 @@ CREATE TABLE IF NOT EXISTS `PousadaDorama`.`FormaPag` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+alter table funcionario
+	change column fg fg decimal(6,2) unsigned null default 0.0;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

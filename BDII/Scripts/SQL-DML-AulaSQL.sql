@@ -49,8 +49,63 @@ update funcionario
 	set fg = 500
 		where genero = "Feminino" and dataNasc <= '2005-09-12';
 
+update funcionario
+	set fg = 1000, salario = 5000, estadoCivil = "Viúva"
+		where nome like "Renata Santos";
+        
+update funcionario
+	set salario = salario * 1.05;
 
+-- Bom problema...    
+update funcionario
+	set fg = fg + 300
+		where salario >= 1500 and salario <= 2500;
 
+update funcionario
+	set fg = 0
+		where fg is null;
+
+alter table funcionario
+	change column fg fg decimal(6,2) unsigned null default 0.0;
+
+insert into funcionario (CPF, nome, dataNasc, genero, estadoCivil,
+	email, carteiraTrab, cargaHoraria, salario, chavePIX, `status`)
+    value ("108.801.000-33", "Priscila Vivida", '1996-04-16', 
+		"Feminino", "Casada", "priscila.vivida@gmail.com", 
+        "321886-98", 40, 3000.30, "108.801.000-33", 1);
+        
+update funcionario
+	set fg = fg + 300
+		where salario between 1500 and 2500;
+	
+update funcionario
+	set fg = 500
+		where nome like "%Lima%" or nome like "%Silva";
+        
+update funcionario
+	set fg = fg + 150
+		where estadoCivil like "_olteir_";
+
+update funcionario
+	set salario = 5000
+		where genero = "Feminino" and (salario <= 3000 or fg = 0.0);
+
+-- SQL - DML - Delete
+
+delete from funcionario
+	where nome like "Aline%";
+
+delete from funcionario
+	where salario > 5000;
+    
+delete from funcionario
+	where estadoCivil like "Solteir%";
+    
+-- SQL - DTL
+start transaction;
+delete from funcionario; -- cabuloso
+commit;
+rollback;
 
 
 
