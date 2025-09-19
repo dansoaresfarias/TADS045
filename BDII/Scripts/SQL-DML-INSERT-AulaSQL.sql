@@ -689,6 +689,153 @@ INSERT INTO Ferias (anoRef, dataInicio, qtdDias, valor, status, Funcionario_CPF)
 (2023, '2023-10-27', 25, 003800.00, 'Aprovado', '134.341.431-11'),
 (2024, '2024-11-29', 15, 002400.00, 'Aprovado', '134.341.431-11');
 
+INSERT INTO cargo (CBO, nome, faixaSalarial) VALUES
+(422120, 'Recepcionista de Hotel', 'R$ 1.800,00 - R$ 2.500,00'),
+(513505, 'Camareira de Hotel', 'R$ 1.600,00 - R$ 2.200,00'),
+(513510, 'Auxiliar de Serviços Gerais', 'R$ 1.500,00 - R$ 2.000,00'),
+(514105, 'Zelador', 'R$ 1.800,00 - R$ 2.400,00'),
+(354805, 'Supervisor de Hospedagem', 'R$ 3.000,00 - R$ 4.200,00'),
+(141205, 'Gerente de Hotel', 'R$ 5.500,00 - R$ 8.000,00'),
+(411005, 'Auxiliar Administrativo', 'R$ 1.900,00 - R$ 2.600,00'),
+(422105, 'Atendente de Reservas', 'R$ 1.800,00 - R$ 2.500,00'),
+(513205, 'Garçom', 'R$ 1.700,00 - R$ 2.300,00'),
+(513215, 'Barman', 'R$ 1.800,00 - R$ 2.400,00'),
+(513220, 'Cozinheiro', 'R$ 2.200,00 - R$ 3.200,00'),
+(513225, 'Auxiliar de Cozinha', 'R$ 1.600,00 - R$ 2.200,00'),
+(514305, 'Jardineiro', 'R$ 1.700,00 - R$ 2.400,00'),
+(514215, 'Manutenção Predial', 'R$ 2.000,00 - R$ 2.800,00'),
+(517415, 'Segurança Patrimonial', 'R$ 2.000,00 - R$ 2.700,00');
+
+INSERT INTO departamento (nome, local, descricao, Gerente_CPF) VALUES
+('Administração', 'Bloco Administrativo', 'Responsável pela gestão financeira, planejamento estratégico e controle geral da pousada.', '108.801.888-11'),
+('Recepção', 'Hall de Entrada', 'Atendimento aos hóspedes, check-in, check-out e suporte às reservas.', '108.801.888-11'),
+('Hospedagem', 'Bloco de Quartos', 'Gerencia a limpeza, organização e conforto das acomodações.', '077.321.654-00'),
+('Alimentos e Bebidas', 'Restaurante Principal', 'Coordena cozinha, bar e serviços de alimentação aos hóspedes.', '077.321.654-00'),
+('Eventos', 'Salão de Eventos', 'Organização de festas, conferências, casamentos e outros eventos.', '014.140.410-44'),
+('Manutenção', 'Oficina de Manutenção', 'Responsável por reparos elétricos, hidráulicos e prediais da pousada.', '014.140.410-44'),
+('Segurança', 'Guarita e Áreas Externas', 'Controle de acesso, monitoramento e proteção patrimonial.', '099.888.777-66'),
+('Serviços Gerais', 'Áreas Comuns', 'Limpeza de áreas comuns, apoio em lavanderia e suporte geral.', '099.888.777-66'),
+('Marketing e Vendas', 'Bloco Administrativo', 'Gerencia a divulgação da pousada, captação de clientes e parcerias.', '134.341.431-11'),
+('Recursos Humanos', 'Bloco Administrativo', 'Recrutamento, seleção, treinamento e suporte aos colaboradores.', '134.341.431-11');
+
+INSERT INTO trabalhar (Funcionario_CPF, Departamento_idDepartamento, Cargo_CBO, dataInicio, dataFim) VALUES
+-- Renata Santos: Recepcionista > Supervisora de Hospedagem
+('108.801.888-11', 2, 422120, '2020-02-01', '2022-12-31'),
+('108.801.888-11', 2, 354805, '2023-01-01', NULL),
+-- Aline Souza: Gerente de Hotel
+('014.140.410-44', 1, 141205, '2018-03-10', NULL),
+-- Lucas Ferreira: Auxiliar Administrativo
+('134.341.431-11', 1, 411005, '2023-07-01', NULL),
+-- Pedro Leão: Segurança Patrimonial
+('134.411.311-44', 7, 517415, '2022-05-15', NULL),
+-- Juliana Lima: Camareira de Hotel
+('021.547.863-00', 3, 513505, '2019-09-01', NULL),
+-- Marcelo Costa: Cozinheiro
+('088.998.657-22', 4, 513220, '2017-04-12', NULL),
+-- Patrícia Andrade: Garçom
+('089.007.654-77', 4, 513205, '2021-01-20', NULL),
+-- Renato Silva: Manutenção Predial
+('067.789.321-90', 6, 514215, '2020-11-10', NULL),
+-- Ana Beatriz Ramos: Auxiliar Administrativo (Marketing)
+('055.123.789-22', 9, 411005, '2022-08-05', NULL),
+-- Carlos Henrique: Supervisor de Hospedagem
+('099.888.777-66', 4, 354805, '2016-06-15', NULL),
+-- Fernanda Oliveira: Atendente de Reservas
+('088.441.998-31', 2, 422105, '2021-10-01', NULL),
+-- João Victor Nunes: Auxiliar Administrativo (RH)
+('011.345.987-44', 10, 411005, '2019-05-11', NULL),
+-- Mariana Ribeiro: Supervisora de Hospedagem (Eventos)
+('065.874.321-56', 5, 354805, '2020-07-20', NULL),
+-- Tiago Martins: Garçom
+('078.321.654-99', 4, 513205, '2021-03-14', NULL),
+-- Camila Duarte: Camareira de Hotel
+('012.147.258-63', 3, 513505, '2022-01-22', NULL),
+-- Bruno Almeida: Gerente de Hotel (Hospedagem)
+('099.321.456-10', 3, 141205, '2019-04-01', NULL),
+-- Letícia Mendes: Recepcionista de Hotel
+('022.998.741-55', 2, 422120, '2021-06-18', NULL),
+-- Gabriel Rocha: Segurança Patrimonial
+('033.741.852-96', 7, 517415, '2018-11-25', NULL),
+-- Isabela Ferreira: Auxiliar Administrativo (Eventos)
+('044.852.963-74', 5, 411005, '2021-02-10', NULL),
+-- Felipe Gomes: Auxiliar Administrativo
+('055.963.147-82', 1, 411005, '2020-09-14', NULL),
+-- Larissa Pinto: Auxiliar Administrativo (RH)
+('066.147.963-33', 10, 411005, '2021-07-01', NULL),
+-- Rodrigo Menezes: Zelador > Manutenção Predial
+('077.321.654-00', 6, 514105, '2015-03-22', '2019-12-31'),
+('077.321.654-00', 6, 514215, '2020-01-01', NULL);
+
+alter table uh 
+	add column valor decimal(6,2) unsigned zerofill not null after nome;
+
+INSERT INTO tipouh (nome) VALUES
+('Standard Solteiro'),
+('Standard Casal'),
+('Luxo Casal'),
+('Luxo Família'),
+('Suíte Master'),
+('Suíte com Varanda'),
+('Chalé'),
+('Bangalô Frente Mar');
+
+INSERT INTO uh (nome, valor, local, qtdPessoas, TipoUH_idTipoUH) VALUES
+-- Standard Solteiro (6)
+('Std Solteiro 101', 180.00, 'Bloco A', 1, 1),
+('Std Solteiro 102', 180.00, 'Bloco A', 1, 1),
+('Std Solteiro 103', 185.00, 'Bloco A', 1, 1),
+('Std Solteiro 104', 185.00, 'Bloco B', 1, 1),
+('Std Solteiro 105', 190.00, 'Bloco B', 1, 1),
+('Std Solteiro 106', 190.00, 'Bloco B', 1, 1),
+-- Standard Casal (8)
+('Std Casal 201', 220.00, 'Bloco A', 2, 2),
+('Std Casal 202', 220.00, 'Bloco A', 2, 2),
+('Std Casal 203', 230.00, 'Bloco A', 2, 2),
+('Std Casal 204', 230.00, 'Bloco B', 2, 2),
+('Std Casal 205', 240.00, 'Bloco B', 2, 2),
+('Std Casal 206', 240.00, 'Bloco B', 2, 2),
+('Std Casal 207', 245.00, 'Bloco C', 2, 2),
+('Std Casal 208', 245.00, 'Bloco C', 2, 2),
+-- Luxo Casal (7)
+('Luxo Casal 301', 300.00, 'Bloco C', 2, 3),
+('Luxo Casal 302', 300.00, 'Bloco C', 2, 3),
+('Luxo Casal 303', 310.00, 'Bloco C', 2, 3),
+('Luxo Casal 304', 310.00, 'Bloco D', 2, 3),
+('Luxo Casal 305', 320.00, 'Bloco D', 2, 3),
+('Luxo Casal 306', 325.00, 'Bloco D', 2, 3),
+('Luxo Casal 307', 330.00, 'Bloco D', 2, 3),
+-- Luxo Família (6)
+('Luxo Família 401', 400.00, 'Bloco D', 4, 4),
+('Luxo Família 402', 400.00, 'Bloco D', 4, 4),
+('Luxo Família 403', 420.00, 'Bloco D', 4, 4),
+('Luxo Família 404', 420.00, 'Bloco E', 4, 4),
+('Luxo Família 405', 430.00, 'Bloco E', 4, 4),
+('Luxo Família 406', 430.00, 'Bloco E', 4, 4),
+-- Suíte Master (4)
+('Suíte Master 501', 600.00, 'Bloco E', 2, 5),
+('Suíte Master 502', 600.00, 'Bloco E', 2, 5),
+('Suíte Master 503', 620.00, 'Bloco E', 3, 5),
+('Suíte Master 504', 650.00, 'Bloco F', 3, 5),
+-- Suíte com Varanda (5)
+('Suíte Varanda 601', 500.00, 'Bloco F', 2, 6),
+('Suíte Varanda 602', 500.00, 'Bloco F', 2, 6),
+('Suíte Varanda 603', 520.00, 'Bloco F', 2, 6),
+('Suíte Varanda 604', 520.00, 'Bloco G', 2, 6),
+('Suíte Varanda 605', 540.00, 'Bloco G', 2, 6),
+-- Chalé (5)
+('Chalé 701', 700.00, 'Jardins', 4, 7),
+('Chalé 702', 700.00, 'Jardins', 4, 7),
+('Chalé 703', 720.00, 'Jardins', 5, 7),
+('Chalé 704', 750.00, 'Jardins', 5, 7),
+('Chalé 705', 750.00, 'Jardins', 5, 7),
+-- Bangalô Frente Mar (4)
+('Bangalô 801', 850.00, 'Praia', 2, 8),
+('Bangalô 802', 850.00, 'Praia', 2, 8),
+('Bangalô 803', 880.00, 'Praia', 3, 8),
+('Bangalô 804', 900.00, 'Praia', 4, 8);
+
+SET SQL_SAFE_UPDATES = 0;
+
 update funcionario
 	set salario = salario * 1.25
 		where genero = "Feminino";
