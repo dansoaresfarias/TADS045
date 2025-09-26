@@ -36,7 +36,56 @@ select upper(nome) "Funcionário",
     concat("R$ ",format(salario, 2, 'de_DE')) "Salário"
     from funcionario
 		order by nome;
-        
+
+select nome "Dependente", 
+	replace(replace(cpf, '.', ''), '-', '') "CPF do Dependente", 
+    timestampdiff(year, dataNasc, now()) "Idade", 
+	upper(parentesco) "Parentesco"
+	from dependente
+		order by idade desc;
+
+-- join implicito
+select d.nome "Dependente", 
+	replace(replace(d.cpf, '.', ''), '-', '') "CPF do Dependente", 
+    timestampdiff(year, d.dataNasc, now()) "Idade", 
+	upper(d.parentesco) "Parentesco", f.nome "Responsável"
+	from dependente d, funcionario f
+		order by d.nome;
+
+-- join implicito
+select d.nome "Dependente", 
+	replace(replace(d.cpf, '.', ''), '-', '') "CPF do Dependente", 
+    timestampdiff(year, d.dataNasc, now()) "Idade", 
+	upper(d.parentesco) "Parentesco", f.nome "Responsável"
+	from dependente d, funcionario f
+		where d.funcionario_cpf = f.cpf
+			order by d.nome;
+
+-- join explicito            
+select d.nome "Dependente", 
+	replace(replace(d.cpf, '.', ''), '-', '') "CPF do Dependente", 
+    timestampdiff(year, d.dataNasc, now()) "Idade", 
+	upper(d.parentesco) "Parentesco", f.nome "Responsável",
+    e.cidade "Cidade"
+	from dependente d
+    inner join funcionario f on f.cpf = d.funcionario_cpf
+    inner join endereco e on e.funcionario_cpf = f.cpf
+			order by d.nome;
+
+select upper(f.nome) "Funcionário", 
+	replace(replace(f.cpf, ".", ""), "-", "") as "CPF", 
+    f.carteiraTrab "Carteira de Trabalho", 
+    date_format(f.dataNasc, "%d/%m/%Y") "Data de Nascimento", 
+    replace(replace(f.genero, "Feminino", "F"), "Masculino", "M") "Gênero", 
+    ucase(f.estadoCivil) "Estado Civil",
+	f.email "E-mail", f.chavePix "Chave PIX", 
+    concat(f.cargaHoraria, "h") "Carga Horária", 
+    concat("R$ ",format(f.salario, 2, 'de_DE')) "Salário",
+    e.bairro "Bairro", e.Cidade "Cidade"
+    from funcionario f
+    inner join endereco e on e.funcionario_cpf = f.cpf
+		order by f.nome;
+
 
 
 
