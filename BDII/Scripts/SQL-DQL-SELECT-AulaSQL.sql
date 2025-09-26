@@ -77,16 +77,33 @@ select upper(f.nome) "Funcionário",
     f.carteiraTrab "Carteira de Trabalho", 
     date_format(f.dataNasc, "%d/%m/%Y") "Data de Nascimento", 
     replace(replace(f.genero, "Feminino", "F"), "Masculino", "M") "Gênero", 
+    coalesce(group_concat(distinct d.nome order by d.nome ASC separator ", "), '--') "Dependente",
     ucase(f.estadoCivil) "Estado Civil",
-	f.email "E-mail", f.chavePix "Chave PIX", 
+	f.email "E-mail", 
+    group_concat(distinct t.numero separator ", ") "Telefone", 
+    f.chavePix "Chave PIX", 
     concat(f.cargaHoraria, "h") "Carga Horária", 
     concat("R$ ",format(f.salario, 2, 'de_DE')) "Salário",
     e.bairro "Bairro", e.Cidade "Cidade"
     from funcionario f
     inner join endereco e on e.funcionario_cpf = f.cpf
-		order by f.nome;
+    inner join telefone t on t.funcionario_cpf = f.cpf
+    left join dependente d on d.funcionario_cpf = f.cpf
+		group by f.cpf
+			order by f.nome;
 
-
+select func.nome "Funcionário", func.cpf "CPF",
+	func.chavePix "Chave PIX",
+	concat(func.cargahoraria, 'h') "Carga Horária",
+    concat("R$ ", format(func.salario, 2, 'de_DE')) "Salário",
+    crg.nome "Cargo", dpt.nome "Departamento", grt.nome "Gerente"
+		from funcionario func
+        inner join trabalhar trb on trb.funcionario_cpf = func.cpf
+        inner join cargo crg on crg.cbo= trb.cargo_cbo
+        inner join departamento dpt on dpt.idDepartamento = trb.Departamento_idDepartamento
+        left join funcionario grt on grt.cpf = dpt.gerente_cpf
+			where trb.dataFim is null
+				order by func.nome;
 
 
 
