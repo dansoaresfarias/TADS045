@@ -196,13 +196,64 @@ select anoRef "Ano de Referência",
 	inner join funcionario on cpf = funcionario_cpf
 		order by anoRef desc;
 
+select func.nome "Funcionário", count(fer.idFerias) "Quantidade de Férias"
+	from funcionario func
+    left join ferias fer on fer.Funcionario_CPF = func.CPF
+		group by func.cpf
+			order by func.nome;
 
+select func.nome "Funcionário", count(fer.idFerias) "Quantidade de Férias"
+	from funcionario func
+    inner join ferias fer on fer.Funcionario_CPF = func.CPF
+		group by func.cpf
+			order by func.nome;
 
+select func.nome "Funcionário", count(fer.idFerias) "Quantidade de Férias"
+	from funcionario func
+    left join ferias fer on fer.Funcionario_CPF = func.CPF
+		where fer.`status` in ("Aprovado", "Em andamento")
+			group by func.cpf
+union
+select func.nome "Funcionário", count(fer.idFerias) "Quantidade de Férias"
+	from funcionario func
+    left join ferias fer on fer.Funcionario_CPF = func.CPF
+		group by func.cpf
+			having count(fer.idFerias) = 0
+				order by `Funcionário`;
 
+-- Auxílio Creche --> 180 por filho menor que 7 anos!
+select func.nome "Funcionário", func.cpf "CPF",
+	count(dep.cpf) "Quantidade de Dependentes"
+    from funcionario func
+    left join dependente dep on dep.Funcionario_CPF = func.CPF
+		group by func.cpf
+			order by func.nome;
 
+select func.nome "Funcionário", func.cpf "CPF",
+	count(dep.cpf) * 180 "Auxílio Creche"
+    from funcionario func
+    left join dependente dep on dep.Funcionario_CPF = func.CPF
+		where timestampdiff(year, dep.dataNasc, now()) < 7 
+			group by func.cpf
+				order by func.nome;
+                
+create view funcAuxCreche2 as
+	select func.cpf "cpf",
+		count(dep.cpf) * 180 "auxCreche"
+		from funcionario func
+		left join dependente dep on dep.Funcionario_CPF = func.CPF
+			where timestampdiff(year, dep.dataNasc, now()) < 7 
+				group by func.cpf
+					order by func.nome;
 
-
-
+-- Funcionário, CPF, Carga Horária, Auxílio Creche, Salário
+select func.nome "Funcionário", func.cpf "CPF", 
+	concat(func.cargaHoraria, 'h') "Carga Horária",
+    concat("R$ ", format(coalesce(fac.auxCreche, 0), 2, 'de_DE')) "Auxílio Creche",
+    concat("R$ ", format(func.salario, 2, 'de_DE')) "Salário"
+    from funcionario func
+	left join funcAuxCreche fac on fac.cpf = func.cpf
+		order by func.nome;
 
 
 
