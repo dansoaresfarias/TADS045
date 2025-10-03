@@ -186,7 +186,15 @@ select * from oibaixa
 -- Ano de Referência | Data Início (03/10/2025) | Data Fim (03/10/2025) | 
 -- Quantidade de Dias | Valor (R$ 1.300,56) | Funcionário (nome)
 -- Ordenado pelo ano de referência de forma do ano mais recente ao mais antigo
-
+select anoRef "Ano de Referência", 
+	date_format(datainicio, '%d/%m/%Y') "Data Início",
+    date_format(date_add(datainicio, interval qtdDias day), '%d/%m/%Y') "Data Fim",
+    concat(qtdDias, " dias") "Quantidade de Dias",
+    concat("R$ ", format(valor, 2, 'de_DE')) "Valor a Receber",
+    nome "Funcionário"
+	from ferias
+	inner join funcionario on cpf = funcionario_cpf
+		order by anoRef desc;
 
 
 
