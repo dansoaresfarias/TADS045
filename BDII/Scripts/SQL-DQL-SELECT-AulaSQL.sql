@@ -104,6 +104,100 @@ select func.nome "Funcionário", func.cpf "CPF",
         left join funcionario grt on grt.cpf = dpt.gerente_cpf
 			where trb.dataFim is null
 				order by func.nome;
+-- data Oc, gravidade, desc, funcionario
+select date_format(dataHora, '%d/%m/%Y - %h:%i') "Data da Ocorrência",
+	upper(gravidade) "Gravidade",
+    descricao "Descrição",
+    nome "Funcionário"
+	from ocorrenciainterna
+	inner join funcionario on funcionario_cpf = cpf
+		order by datahora desc;
+
+select date_format(dataHora, '%d/%m/%Y - %h:%i') "Data da Ocorrência",
+	upper(gravidade) "Gravidade",
+    descricao "Descrição",
+    nome "Funcionário"
+	from ocorrenciainterna
+	inner join funcionario on funcionario_cpf = cpf
+		where gravidade like "Alta"
+union
+select date_format(dataHora, '%d/%m/%Y - %h:%i') "Data da Ocorrência",
+	upper(gravidade) "Gravidade",
+    descricao "Descrição",
+    nome "Funcionário"
+	from ocorrenciainterna
+	inner join funcionario on funcionario_cpf = cpf
+		where gravidade like "Média"
+union
+select date_format(dataHora, '%d/%m/%Y - %h:%i') "Data da Ocorrência",
+	upper(gravidade) "Gravidade",
+    descricao "Descrição",
+    nome "Funcionário"
+	from ocorrenciainterna
+	inner join funcionario on funcionario_cpf = cpf
+		where gravidade like "Baixa";
+
+select date_format(dataHora, '%d/%m/%Y - %h:%i') "Data da Ocorrência",
+	upper(gravidade) "Gravidade",
+    descricao "Descrição",
+    nome "Funcionário"
+	from ocorrenciainterna
+	inner join funcionario on funcionario_cpf = cpf
+		where gravidade like "Alta"
+			order by dataHora desc;
+            
+create view oiAlta as
+	select date_format(dataHora, '%d/%m/%Y - %h:%i') "Data da Ocorrência",
+		upper(gravidade) "Gravidade",
+		descricao "Descrição",
+		nome "Funcionário"
+		from ocorrenciainterna
+		inner join funcionario on funcionario_cpf = cpf
+			where gravidade like "Alta"
+				order by dataHora desc;
+
+create view oiMedia as
+	select date_format(dataHora, '%d/%m/%Y - %h:%i') "Data da Ocorrência",
+		upper(gravidade) "Gravidade",
+		descricao "Descrição",
+		nome "Funcionário"
+		from ocorrenciainterna
+		inner join funcionario on funcionario_cpf = cpf
+			where gravidade like "Média"
+				order by dataHora desc;
+
+create view oiBaixa as
+	select date_format(dataHora, '%d/%m/%Y - %h:%i') "Data da Ocorrência",
+		upper(gravidade) "Gravidade",
+		descricao "Descrição",
+		nome "Funcionário"
+		from ocorrenciainterna
+		inner join funcionario on funcionario_cpf = cpf
+			where gravidade like "Baixa"
+				order by dataHora desc;
+
+select * from oialta
+union 
+select * from oimedia
+union
+select * from oibaixa
+	order by `Data da Ocorrência` desc;
+
+-- Ano de Referência | Data Início (03/10/2025) | Data Fim (03/10/2025) | 
+-- Quantidade de Dias | Valor (R$ 1.300,56) | Funcionário (nome)
+-- Ordenado pelo ano de referência de forma do ano mais recente ao mais antigo
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
