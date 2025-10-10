@@ -256,8 +256,12 @@ select func.nome "Funcionário", func.cpf "CPF",
 		order by func.nome;
 
 
-select func.nome "Funcionário", func.cpf "CPF", 
+select upper(func.nome) "Funcionário", func.cpf "CPF", 
 	concat(func.cargaHoraria, 'h') "Carga Horária",
+    case func.genero when "Feminino" then "F"
+					when "Masculino" then "M" 
+					else "Não informado" 
+    end"Gênero",
     concat("R$ ", format(coalesce(fac.auxCreche, 0), 2, 'de_DE')) "Auxílio Creche",
     case when timestampdiff(year, func.dataNasc, now()) < 25 
 				then concat("R$ ", format(150, 2, 'de_DE'))
@@ -274,10 +278,146 @@ select func.nome "Funcionário", func.cpf "CPF",
 	left join funcAuxCreche fac on fac.cpf = func.cpf
 		order by func.nome;
 
+select round(7.361, 1);
+
+select round(7.341, 1);
+
+select truncate(7.399, 1);
+
+select mod(5, 2);
+
+select sysdate();
+
+select date_add(sysdate(), interval -7 day);
+
+select date_add(sysdate(), interval 7 day);
+
+select date_add(sysdate(), interval 50 minute);
+
+select now(), date_add(sysdate(), interval 30 day);
+
+select date_format(now(), '%d/%m/%y');
+
+select avg(salario) from funcionario;
+
+select round(avg(salario),2) from funcionario;
+
+select max(salario) from funcionario;
+
+select min(salario) from funcionario;
+
+select func.CPF, func.nome, count(dep.cpf) 
+	from dependente dep
+	inner join funcionario func on func.CPF = dep.Funcionario_CPF
+		group by Funcionario_CPF
+			order by func.nome;
+
+select func.CPF, func.nome, count(dep.cpf) 
+	from funcionario func
+	left join dependente dep on func.CPF = dep.Funcionario_CPF
+		group by func.cpf
+			order by func.nome;
+
+select dep.nome "Departamento", 
+	concat("R$ ", format(sum(func.salario), 2, 'de_DE')) "Custo Salarial",
+    count(func.cpf) "Quantidade de Funcionários",
+    concat("R$ ", format(avg(func.salario), 2, 'de_DE')) "Média Salarial"
+	from trabalhar trb
+	inner join funcionario func on func.CPF = trb.Funcionario_CPF
+    inner join departamento dep on dep.idDepartamento = trb.Departamento_idDepartamento
+		group by dep.idDepartamento
+			order by avg(func.salario) desc;
+
+select dep.nome "Departamento", 
+	concat("R$ ", format(sum(func.salario), 2, 'de_DE')) "Custo Salarial",
+    count(func.cpf) "Quantidade de Funcionários",
+    concat("R$ ", format(avg(func.salario), 2, 'de_DE')) "Média Salarial"
+	from trabalhar trb
+	inner join funcionario func on func.CPF = trb.Funcionario_CPF
+    inner join departamento dep on dep.idDepartamento = trb.Departamento_idDepartamento
+			group by dep.idDepartamento
+				having sum(func.salario) >= 10000
+					order by `Custo Salarial` desc;
 
 
+select dep.nome "Departamento", 
+	concat("R$ ", format(sum(func.salario), 2, 'de_DE')) "Custo Salarial",
+    count(func.cpf) "Quantidade de Funcionários",
+    concat("R$ ", format(avg(func.salario), 2, 'de_DE')) "Média Salarial"
+	from trabalhar trb
+	inner join funcionario func on func.CPF = trb.Funcionario_CPF
+    inner join departamento dep on dep.idDepartamento = trb.Departamento_idDepartamento
+			group by dep.idDepartamento
+				having sum(func.salario) >= 10000
+					order by 4 desc;
 
-
-
-
-
+select avg(salario) from funcionario;
+                    
+select upper(func.nome) "Funcionário", func.cpf "CPF", 
+	concat(func.cargaHoraria, 'h') "Carga Horária",
+    case func.genero when "Feminino" then "F"
+					when "Masculino" then "M" 
+					else "Não informado" 
+    end"Gênero",
+    concat("R$ ", format(coalesce(fac.auxCreche, 0), 2, 'de_DE')) "Auxílio Creche",
+    case when timestampdiff(year, func.dataNasc, now()) < 25 
+				then concat("R$ ", format(150, 2, 'de_DE'))
+		when timestampdiff(year, func.dataNasc, now()) between 24 and 34
+				then concat("R$ ", format(250, 2, 'de_DE'))
+		when timestampdiff(year, func.dataNasc, now()) between 34 and 45
+				then concat("R$ ", format(350, 2, 'de_DE'))
+		when timestampdiff(year, func.dataNasc, now()) between 44 and 55
+				then concat("R$ ", format(450, 2, 'de_DE'))
+		else concat("R$ ", format(600, 2, 'de_DE'))
+	end "Auxílio Saúde",
+    concat("R$ ", format(func.salario, 2, 'de_DE')) "Salário"
+    from funcionario func
+	left join funcAuxCreche fac on fac.cpf = func.cpf
+		where salario <= (select avg(salario) from funcionario)
+			order by func.nome;
+            
+select upper(func.nome) "Funcionário", func.cpf "CPF", 
+	concat(func.cargaHoraria, 'h') "Carga Horária",
+    case func.genero when "Feminino" then "F"
+					when "Masculino" then "M" 
+					else "Não informado" 
+    end"Gênero",
+    concat("R$ ", format(coalesce(fac.auxCreche, 0), 2, 'de_DE')) "Auxílio Creche",
+    case when timestampdiff(year, func.dataNasc, now()) < 25 
+				then concat("R$ ", format(150, 2, 'de_DE'))
+		when timestampdiff(year, func.dataNasc, now()) between 24 and 34
+				then concat("R$ ", format(250, 2, 'de_DE'))
+		when timestampdiff(year, func.dataNasc, now()) between 34 and 45
+				then concat("R$ ", format(350, 2, 'de_DE'))
+		when timestampdiff(year, func.dataNasc, now()) between 44 and 55
+				then concat("R$ ", format(450, 2, 'de_DE'))
+		else concat("R$ ", format(600, 2, 'de_DE'))
+	end "Auxílio Saúde",
+    concat("R$ ", format(func.salario, 2, 'de_DE')) "Salário"
+    from funcionario func
+	left join funcAuxCreche fac on fac.cpf = func.cpf
+		where salario = (select max(salario) from funcionario)
+			order by func.nome;
+            
+select upper(func.nome) "Funcionário", func.cpf "CPF", 
+	concat(func.cargaHoraria, 'h') "Carga Horária",
+    case func.genero when "Feminino" then "F"
+					when "Masculino" then "M" 
+					else "Não informado" 
+    end"Gênero",
+    concat("R$ ", format(coalesce(fac.auxCreche, 0), 2, 'de_DE')) "Auxílio Creche",
+    case when timestampdiff(year, func.dataNasc, now()) < 25 
+				then concat("R$ ", format(150, 2, 'de_DE'))
+		when timestampdiff(year, func.dataNasc, now()) between 24 and 34
+				then concat("R$ ", format(250, 2, 'de_DE'))
+		when timestampdiff(year, func.dataNasc, now()) between 34 and 45
+				then concat("R$ ", format(350, 2, 'de_DE'))
+		when timestampdiff(year, func.dataNasc, now()) between 44 and 55
+				then concat("R$ ", format(450, 2, 'de_DE'))
+		else concat("R$ ", format(600, 2, 'de_DE'))
+	end "Auxílio Saúde",
+    concat("R$ ", format(func.salario, 2, 'de_DE')) "Salário"
+    from funcionario func
+	left join funcAuxCreche fac on fac.cpf = func.cpf
+		where salario = (select min(salario) from funcionario)
+			order by func.nome;
