@@ -256,7 +256,23 @@ select func.nome "Funcionário", func.cpf "CPF",
 		order by func.nome;
 
 
-
+select func.nome "Funcionário", func.cpf "CPF", 
+	concat(func.cargaHoraria, 'h') "Carga Horária",
+    concat("R$ ", format(coalesce(fac.auxCreche, 0), 2, 'de_DE')) "Auxílio Creche",
+    case when timestampdiff(year, func.dataNasc, now()) < 25 
+				then concat("R$ ", format(150, 2, 'de_DE'))
+		when timestampdiff(year, func.dataNasc, now()) between 24 and 34
+				then concat("R$ ", format(250, 2, 'de_DE'))
+		when timestampdiff(year, func.dataNasc, now()) between 34 and 45
+				then concat("R$ ", format(350, 2, 'de_DE'))
+		when timestampdiff(year, func.dataNasc, now()) between 44 and 55
+				then concat("R$ ", format(450, 2, 'de_DE'))
+		else concat("R$ ", format(600, 2, 'de_DE'))
+	end "Auxílio Saúde",
+    concat("R$ ", format(func.salario, 2, 'de_DE')) "Salário"
+    from funcionario func
+	left join funcAuxCreche fac on fac.cpf = func.cpf
+		order by func.nome;
 
 
 
