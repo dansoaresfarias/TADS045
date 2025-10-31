@@ -421,3 +421,39 @@ select upper(func.nome) "Funcionário", func.cpf "CPF",
 	left join funcAuxCreche fac on fac.cpf = func.cpf
 		where salario = (select min(salario) from funcionario)
 			order by func.nome;
+
+update funcionario, 
+	(select func.cpf from funcionario func
+	inner join trabalhar trb on trb.Funcionario_CPF = func.cpf
+	inner join cargo crg on crg.CBO = trb.Cargo_CBO
+    where crg.nome like "Segurança%" or crg.nome like "Auxiliar%") as crgFunc
+	set cargaHoraria = 36
+		where funcionario.cpf = crgFunc.cpf;
+            
+select upper(func.nome) "Funcionário",
+	replace(replace(func.cpf, '.', ''), '-', '') "CPF",
+    func.chavePIX "Chave PIX",
+    concat(func.cargaHoraria, 'h') "Carga Horária",
+    concat('R$ ', format(func.salario, 2, 'de_DE')) "Salário Bruto",
+    "Vale Alimentação"
+	from funcionario func
+		order by func.nome;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
