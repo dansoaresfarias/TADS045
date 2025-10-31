@@ -429,14 +429,121 @@ update funcionario,
     where crg.nome like "Segurança%" or crg.nome like "Auxiliar%") as crgFunc
 	set cargaHoraria = 36
 		where funcionario.cpf = crgFunc.cpf;
+
+-- https://dev.mysql.com/doc/refman/8.4/en/create-procedure.html
+-- https://dev.mysql.com/doc/refman/8.4/en/declare-local-variable.html
             
+delimiter $$ 
+create function calcValeAlim(ch int)
+	returns decimal(6,2) deterministic 
+    begin
+		declare diariaVA decimal(5,2) default 15.0;
+        if (ch = 36) 
+			then return 22 * diariaVA * 2;
+		else 
+			return 22 * diariaVA;
+		end if;
+    end $$
+delimiter ;
+
+delimiter $$
+create function calcAuxSaude(dn date)
+	returns decimal(6,2) deterministic
+    begin
+		declare idade int;
+        set idade = timestampdiff(year, dn, now());
+        if (idade < 25) 
+			then return 150;
+		elseif (idade < 35)
+			then return 250;
+		elseif (idade < 45)
+			then return 350;
+		elseif (idade < 55)
+			then return 450;
+		else 
+			return 600;
+        end if;
+    end $$
+delimiter ;
+
+delimiter $$
+create function calcValeTrans(pCPF varchar(14))
+	returns decimal(5,2) deterministic
+    begin
+		declare c varchar(60);
+        declare s decimal(7,2);
+        declare VT decimal(5,2) default 0.0;
+        
+        select cidade into c from endereco where Funcionario_CPF = pCPF;
+        select salario into s from funcionario where cpf = pCPF;
+        
+        if (c = "Recife") 
+			then set VT = 22 * 4.3 * 2 - 0.06 * s;
+		else 
+			set VT = 22 * 4.3 * 4 - 0.06 * s;
+		end if;
+        
+        if (VT > 0)
+			then return VT;
+		else 
+			return 0.0;
+		end if;
+    end $$
+delimiter ;
+
+delimiter $$
+create function calcINSS(salario decimal(7,2))
+	returns decimal(6,2) deterministic
+    begin
+		if (salario <= 1518) 
+			then return salario * 0.075;
+		elseif (salario <= 2793.88)
+			then return salario * 0.09;
+		elseif (salario <= 4190.83)
+			then return salario * 0.12;
+		elseif (salario <= 8157.41)
+			then return salario * 0.14;
+		else 
+			return 8157.41 * 0.14;
+		end if;
+    end $$
+delimiter ;
+
+delimiter $$
+create function calcIRRF(salario decimal(7,2))
+	returns decimal(6,2) deterministic
+    begin
+		if (salario <= 2259.20) 
+			then return 0.0;
+		elseif (salario <= 2826.65)
+			then return salario * 0.075;
+		elseif (salario <= 3751.05)
+			then return salario * 0.15;
+		elseif (salario <= 4664.68)
+			then return salario * 0.225;
+		else 
+			return salario * 0.275;
+		end if;
+    end $$
+delimiter ;
+
 select upper(func.nome) "Funcionário",
 	replace(replace(func.cpf, '.', ''), '-', '') "CPF",
     func.chavePIX "Chave PIX",
     concat(func.cargaHoraria, 'h') "Carga Horária",
     concat('R$ ', format(func.salario, 2, 'de_DE')) "Salário Bruto",
-    "Vale Alimentação"
+    concat('R$ ', format(calcValeAlim(func.cargaHoraria), 2, 'de_DE')) "Vale Alimentação",
+    concat('R$ ', format(coalesce(fac.auxCreche, 0), 2, 'de_DE')) "Auxílio Creche",
+    concat('R$ ', format(calcAuxSaude(func.dataNasc), 2, 'de_DE')) "Auxílio Saúde",
+    concat('R$ ', format(calcValeTrans(func.cpf), 2, 'de_DE')) "Vale Transporte",  
+    concat('- R$ ', format(calcINSS(func.salario), 2, 'de_DE')) "INSS",
+    concat('- R$ ', format(calcIRRF(func.salario), 2, 'de_DE')) "IRRF",
+    concat('R$ ', format(func.salario + calcValeAlim(func.cargaHoraria) + 
+    coalesce(fac.auxCreche, 0) + calcAuxSaude(func.dataNasc) +
+    calcValeTrans(func.cpf) - calcINSS(func.salario) -
+    calcIRRF(func.salario), 2, 'de_DE')) "Salário Líquido"
 	from funcionario func
+    left join funcauxcreche fac on fac.cpf = func.CPF
 		order by func.nome;
 
 
