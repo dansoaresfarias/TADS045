@@ -432,7 +432,6 @@ update funcionario,
 
 -- https://dev.mysql.com/doc/refman/8.4/en/create-procedure.html
 -- https://dev.mysql.com/doc/refman/8.4/en/declare-local-variable.html
-            
 delimiter $$ 
 create function calcValeAlim(ch int)
 	returns decimal(6,2) deterministic 
@@ -546,12 +545,57 @@ select upper(func.nome) "Funcionário",
     left join funcauxcreche fac on fac.cpf = func.CPF
 		order by func.nome;
 
+delimiter $$
+create procedure cadFuncionario(in pCPF varchar(14),
+								in pnome varchar(60),
+								in pnomeSocial varchar(45),
+								in pdataNasc date,
+								in pgenero varchar(25),
+								in pestadoCivil varchar(25),
+								in pemail varchar(80),
+								in pcarteiraTrab varchar(45),
+								in pcargaHoraria int,
+								in psalario decimal(7,2),
+								in pchavePIX varchar(45),
+                                in pUF char(2),
+								in pcidade varchar(45),
+								in pbairro varchar(45),
+								in prua varchar(45),
+								in pnumero int,
+								in pcomp varchar(45),
+								in pcep varchar(9),
+                                in ptelefone1 varchar(15),
+                                in ptelefone2 varchar(15),
+                                in ptelefone3 varchar(15))
+	begin
+		insert into funcionario
+			values (pCPF, pnome, pnomeSocial, pdataNasc, pgenero, 
+            pestadoCivil, pemail, pcarteiraTrab, pcargaHoraria, 
+            psalario, pchavePIX, 1, 0.0);
+		insert into endereco
+			values (pCPF, pUF, pcidade, pbairro, prua, pnumero, pcomp, pcep);
+		insert into telefone (numero, Funcionario_CPF)
+			values (ptelefone1, pCPF);
+		if(ptelefone2 is not null)
+			then insert into telefone (numero, Funcionario_CPF)
+					values (ptelefone2, pCPF);
+		end if;
+        if(ptelefone3 is not null)
+			then insert into telefone (numero, Funcionario_CPF)
+					values (ptelefone3, pCPF);
+		end if;
+    end $$
+delimiter ;
 
+call cadFuncionario("152.251.125-25", "Jorge Antônio", null, '2005-10-12',
+	"Masculino", "Solteiro", "jorge.antonio@gmail.com", "897675-00",
+    36, 3000.80, "jorge.antonio@gmail.com", "PE", "Camaragibe", "Aldeia",
+    "Rua Feliciano Borges", 13, null, "51090-080", "81973377337", 
+    "8198778900", null);
 
-
-
-
-
+select * from funcionario order by nome;
+select * from endereco;
+select * from telefone;
 
 
 
