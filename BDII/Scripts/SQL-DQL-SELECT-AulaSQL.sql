@@ -608,13 +608,43 @@ create procedure realizarCheckin(in pIdReserva int,
 						in pemail varchar(45),
                         in pResponsavel_docIdentificacao varchar(25))
 	begin
+		declare auxidHospedagem int default 0;
+        declare auxidHospede varchar(25) default "0";
+        
+        select Reserva_idReserva into auxidHospedagem
+			from hospedagem
+				where Reserva_idReserva = pIdReserva;
 		
+        if(auxidHospedagem = 0)
+			then insert into hospedagem
+					value(pIdReserva, now(), null, 0.0);
+				update reserva
+					set `status` = "CheckIn"
+						where idReserva = pIdReserva;
+		end if;
+        
+        select docIdentificacao into auxidHospede
+			from hospede
+				where docIdentificacao = pdocIdentificacao;
+        
+        if(auxidHospede = "0")
+			then insert into hospede
+					value(pdocIdentificacao, pnome, pgenero, pdataNasc,
+                    ptelefone, pemail, pResponsavel_docIdentificacao);
+		end if;
+        
+        insert into hospedar
+			value (pIdReserva, pdocIdentificacao);
     end $$
 delimiter ;
 
+call realizarCheckin(334, "098.890.789-00", "Gustavo Dorama", "Masculino", 
+		'1994-06-10', "81987789800", "gustavo.dev.desenrolado@gmail.com",
+		null);
 
-
-
+call realizarCheckin(334, "089.999.789-00", "Lara Dorama", "Feminino", 
+		'1995-10-10', "81987789811", "lara.das.encomendas@gmail.com",
+		null);
 
 
 
