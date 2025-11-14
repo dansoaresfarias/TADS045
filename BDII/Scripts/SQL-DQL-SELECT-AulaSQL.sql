@@ -646,6 +646,49 @@ call realizarCheckin(334, "089.999.789-00", "Lara Dorama", "Feminino",
 		'1995-10-10', "81987789811", "lara.das.encomendas@gmail.com",
 		null);
 
+delimiter $$
+create trigger tgr_aft_insert_itenshospedagem after insert
+	on itenshospedagem
+    for each row
+    begin
+		update produto
+			set quantidade = quantidade - new.qtd
+				where idProduto = new.Produto_idProduto;
+		update hospedagem
+			set valorTotal = valorTotal + new.qtd * new.valorUnd
+				where Reserva_idReserva = new.Hospedagem_Reserva_idReserva;
+    end $$
+delimiter ;
+
+insert into itenshospedagem
+	values (334, 2, 2, 5), 
+			(334, 6, 5, 12),
+            (334, 15, 2, 6),
+            (334, 23, 1, 50);
+
+delimiter $$
+create trigger tgr_bfr_insert_itenshospedagem before insert
+	on itenshospedagem
+	for each row
+    begin
+		declare auxQtdProduto int;
+        
+        select quantidade into auxQtdProduto
+			from produto
+				where idProduto = new.Produto_idProduto;
+                
+		if(new.qtd > auxQtdProduto)
+			then SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Quantidade insuficiente para o consumo desse produto!';
+		end if;
+    end $$
+delimiter ;
+
+insert into itenshospedagem
+	values (334, 1, 2, 4.5), 
+			(334, 7, 500, 11),
+            (334, 22, 2, 80);
+
+
 
 
 
