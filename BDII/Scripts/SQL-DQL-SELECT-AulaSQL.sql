@@ -597,7 +597,20 @@ select * from funcionario order by nome;
 select * from endereco;
 select * from telefone;
 
-
+-- Procedure de Check-In FODAAAAAA!!!
+delimiter $$
+create procedure realizarCheckin(in pIdReserva int,
+						in pdocIdentificacao varchar(25),
+						in pnome varchar(45),
+						in pgenero varchar(25),
+						in pdataNasc date,
+						in ptelefone varchar(15),
+						in pemail varchar(45),
+                        in pResponsavel_docIdentificacao varchar(25))
+	begin
+		
+    end $$
+delimiter ;
 
 
 

@@ -1055,7 +1055,7 @@ insert into reserva (dataInicio, dataFim, qtdPessoas, `status`, Funcionario_CPF,
 			"40.404.040-4 RJ");
             
 insert into UH_Reserva
-	values (40, 327), (41, 328), (42, 329), (43, 330), (44, 331), (45, 332);
+	values (40, 329), (41, 330), (42, 331), (43, 332), (44, 333), (45, 334);
 
 
 
