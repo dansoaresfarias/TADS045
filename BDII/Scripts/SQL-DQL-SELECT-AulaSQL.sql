@@ -680,7 +680,7 @@ create trigger tgr_bfr_insert_itenshospedagem before insert
 		if(new.qtd > auxQtdProduto)
 			then SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Quantidade insuficiente para o consumo desse produto!';
 		end if;
-    end $$
+    end $$    
 delimiter ;
 
 insert into itenshospedagem
@@ -688,9 +688,65 @@ insert into itenshospedagem
 			(334, 7, 500, 11),
             (334, 22, 2, 80);
 
+delimiter $$
+create trigger trg_aft_delete_itenshospedagem after delete
+	on itenshospedagem
+    for each row
+    begin
+		update produto
+			set quantidade = quantidade + old.qtd
+				where idProduto = old.Produto_idProduto;
+		update hospedagem
+			set valorTotal = valorTotal - old.qtd * old.valorUnd
+				where Reserva_idReserva = old.Hospedagem_Reserva_idReserva;
+    end $$
+delimiter ;
+
+call realizarCheckin(333, "161.608.084-98", "Luis Martiniano", "Masculino", 
+		'2006-09-20', "81986444486", "onai.valorante@gmail.com",
+		null);
 
 
+insert into itenshospedagem
+	values (333, 2, 2, 5), 
+			(333, 3, 10, 6.5),
+            (333, 13, 4, 8.5);
+
+delete from itenshospedagem
+	where Hospedagem_Reserva_idReserva = 333 and
+		Produto_idProduto = 2;
+
+delimiter $$
+create trigger trg_aft_update_itenshospedagem after update
+	on itenshospedagem
+    for each row
+    begin
+		if(new.qtd > old.qtd) then
+			update produto
+				set quantidade = quantidade - (new.qtd - old.qtd)
+					where idProduto = new.Produto_idProduto;
+			update hospedagem
+				set valorTotal = valorTotal + (new.qtd - old.qtd) * new.valorUnd
+					where Reserva_idReserva = new.Hospedagem_Reserva_idReserva;
+        else
+			update produto
+				set quantidade = quantidade + (old.qtd - new.qtd)
+					where idProduto = old.Produto_idProduto;
+			update hospedagem
+				set valorTotal = valorTotal - (old.qtd - new.qtd) * old.valorUnd
+					where Reserva_idReserva = old.Hospedagem_Reserva_idReserva;
+        end if;
+    end $$
+delimiter ;
 
 
+update itenshospedagem
+	set qtd = 7
+		where Hospedagem_Reserva_idReserva = 333 and
+				Produto_idProduto = 3;
 
+update itenshospedagem
+	set qtd = 6
+		where Hospedagem_Reserva_idReserva = 333 and
+				Produto_idProduto = 13;
 
